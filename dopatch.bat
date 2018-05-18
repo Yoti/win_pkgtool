@@ -32,6 +32,12 @@ if not exist %1.XFL (
 )
 set /p xfl=<%1.XFL
 wget -q --no-check-certificate --show-progress -O %1.xml %xfl%
+for %%i in (%1.xml) do (
+	if %%~zi equ 0 (
+		echo Error: no PKG [Patches Found]
+		goto thisistheend
+	)
+)
 xmlparse %1.xml quite
 set /p pkg=<%1.PKL
 wget -q --show-progress -O %1.pkg %pkg%
