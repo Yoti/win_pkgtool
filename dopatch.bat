@@ -4,8 +4,7 @@ if "%1"=="" (
 	echo Error: no TITLE_ID
 	goto thisistheend
 )
-rd /s /q !temp
-mkdir !temp
+if not exist !temp mkdir !temp
 if not exist !bin\wget.exe (
 	echo Error: no wget
 	echo https://eternallybored.org/misc/wget/
@@ -23,22 +22,24 @@ if not exist !bin\psvpfsparser.exe (
 )
 
 echo Step 1 of 3 (wget)
-start /wait getpatch %1
-if not exist %1.XFL (
+start /wait !bin\getpatch %1
+ren %1.XFL %1-PATCH.XFL
+if not exist %1-PATCH.XFL (
 	echo Error: no XFL [XML File Link]
 	goto thisistheend
 )
-move %1.XFL !temp
-set /p xfl=<!temp\%1.XFL
-!bin\wget -q --no-check-certificate --show-progress -O !temp\%1.xml %xfl%
-for %%i in (!temp\%1.xml) do (
+move %1-PATCH.XFL !temp
+set /p xfl=<!temp\%1-PATCH.XFL
+!bin\wget -q --no-check-certificate --show-progress -O !temp\%1-PATCH.XML %xfl%
+for %%i in (!temp\%1-PATCH.XML) do (
 	if %%~zi equ 0 (
 		echo Error: no PKG [Patches Found]
 		goto thisistheend
 	)
 )
-xmlparse !temp\%1.xml quite
-set /p pkg=<!temp\%1.PKL
+findstr /I http !temp\%1-PATCH.XML > !temp\%1-PATCH.STR
+!bin\myparser !temp\%1-PATCH.STR http \34 .PKL
+set /p pkg=<!temp\%1-PATCH.PKL
 !bin\wget -q --show-progress -O %1.pkg %pkg%
 
 echo Step 2 of 3 (pkg2zip)
@@ -46,15 +47,17 @@ echo Step 2 of 3 (pkg2zip)
 move %1.pkg patch
 
 echo Step 3 of 3 (psvpfstools)
-!bin\wget -q --show-progress -O !temp\PSV_GAMES.tsv https://nopaystation.com/tsv/PSV_GAMES.tsv
-findstr /I %1 !temp\PSV_GAMES.tsv > !temp\PSV_GAMES.txt
-tsvparse !temp\PSV_GAMES.txt quite
-if not exist !temp\PSV_GAMES.ZRF (
+!bin\wget -q --show-progress -O !temp\%1-PATCH.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
+findstr /I %1 !temp\%1-PATCH.TSV > !temp\%1-PATCH.STR
+!bin\myparser !temp\%1-PATCH.STR KO5i \9 .ZRF
+if not exist !temp\%1-PATCH.ZRF (
 	echo Error: no ZRF [zRIF String]
 	goto thisistheend
 )
-set /p rif=<!temp\PSV_GAMES.ZRF
+set /p rif=<!temp\%1-PATCH.ZRF
 !bin\psvpfsparser.exe -i patch\%1 -o patch\%1_dec -z %rif% -f cma.henkaku.xyz
 
 :thisistheend
-pause
+cd !temp
+for %%i in (%1-PATCH.*) do del /q %%i
+cd ..
