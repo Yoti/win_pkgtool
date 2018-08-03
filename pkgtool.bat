@@ -4,8 +4,7 @@ if "%1"=="" (
 	echo Error: no TITLE_ID
 	goto thisistheend
 )
-if exist !temp rd /s /q !temp
-mkdir !temp
+if not exist !temp mkdir !temp
 if not exist !bin\wget.exe (
 	echo Error: no wget
 	echo https://eternallybored.org/misc/wget/
