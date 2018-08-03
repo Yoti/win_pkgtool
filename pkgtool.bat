@@ -4,7 +4,7 @@ if "%1"=="" (
 	echo Error: no TITLE_ID
 	goto thisistheend
 )
-rd /s /q !temp
+if exist !temp rd /s /q !temp
 mkdir !temp
 if not exist !bin\wget.exe (
 	echo Error: no wget
@@ -23,19 +23,20 @@ if not exist !bin\psvpfsparser.exe (
 )
 
 echo Step 1 of 3 (wget)
-!bin\wget -q --show-progress -O !temp\PSV_GAMES.tsv https://nopaystation.com/tsv/PSV_GAMES.tsv
-findstr /I %1 !temp\PSV_GAMES.tsv > !temp\PSV_GAMES.txt
-tsvparse !temp\PSV_GAMES.txt quite
-if not exist !temp\PSV_GAMES.PKL (
+!bin\wget -q --show-progress -O !temp\%1-APP.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
+findstr /I %1 !temp\%1-APP.TSV > !temp\%1-APP.STR
+!bin\myparser !temp\%1-APP.STR http .pkg .PKL
+if not exist !temp\%1-APP.PKL (
 	echo Error: no PKL [PKG Link]
 	goto thisistheend
 )
-set /p pkg=<!temp\PSV_GAMES.PKL
-if not exist !temp\PSV_GAMES.ZRF (
+set /p pkg=<!temp\%1-APP.PKL
+!bin\myparser !temp\%1-APP.STR KO5i \9 .ZRF
+if not exist !temp\%1-APP.ZRF (
 	echo Error: no ZRF [zRIF String]
 	goto thisistheend
 )
-set /p rif=<!temp\PSV_GAMES.ZRF
+set /p rif=<!temp\%1-APP.ZRF
 !bin\wget -q --show-progress -O %1.pkg %pkg%
 
 echo Step 2 of 3 (pkg2zip)
@@ -46,4 +47,6 @@ echo Step 3 of 3 (psvpfstools)
 !bin\psvpfsparser.exe -i app\%1 -o app\%1_dec -z %rif% -f cma.henkaku.xyz
 
 :thisistheend
-pause
+cd !temp
+for %%i in (%1-APP.*) do del /q %%i
+cd ..
