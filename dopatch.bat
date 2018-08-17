@@ -37,8 +37,8 @@ for %%i in (!temp\%1-PATCH.XML) do (
 		goto thisistheend
 	)
 )
-findstr /I http !temp\%1-PATCH.XML > !temp\%1-PATCH.STR
-!bin\myparser !temp\%1-PATCH.STR http \34 .PKL
+findstr /I .pkg !temp\%1-PATCH.XML > !temp\%1-PATCH.STR
+!bin\myparser !temp\%1-PATCH.STR http .pkg .PKL patch >NULL
 set /p pkg=<!temp\%1-PATCH.PKL
 !bin\wget -q --show-progress -O %1.pkg %pkg%
 
@@ -49,7 +49,7 @@ move %1.pkg patch
 echo Step 3 of 3 (psvpfstools)
 !bin\wget -q --show-progress -O !temp\%1-PATCH.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
 findstr /I %1 !temp\%1-PATCH.TSV > !temp\%1-PATCH.STR
-!bin\myparser !temp\%1-PATCH.STR KO5i \9 .ZRF
+!bin\myparser !temp\%1-PATCH.STR KO5i \9 .ZRF >NULL
 if not exist !temp\%1-PATCH.ZRF (
 	echo Error: no ZRF [zRIF String]
 	goto thisistheend
