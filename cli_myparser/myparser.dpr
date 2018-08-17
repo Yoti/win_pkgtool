@@ -24,6 +24,41 @@ begin
   Result:=Chr(StrToInt(Copy(SrcStr, 2, Length(SrcStr)-1)));
 end;
 
+function ExtractSubString2(SrcStr, FromStr, ToStr: String): String;
+var
+  ToStrPos: Integer;
+  ToStrPosTemp: Integer;
+  FromStrPos: Integer;
+  FromStrPosTemp: Integer;
+begin
+  ToStrPos:=0;
+  ToStrPosTemp:=0;
+  repeat
+    ToStrPosTemp:=PosEx(ToStr, SrcStr, ToStrPosTemp);
+    if ToStrPosTemp <> 0 then begin
+      Inc(ToStrPosTemp);
+    end;
+    if (ToStrPosTemp <> 0)
+    then ToStrPos:=ToStrPosTemp; // !!!
+    //WriteLn('To: ' + IntToStr(ToStrPos));
+  until ToStrPosTemp=0;
+
+  FromStrPos:=0;
+  FromStrPosTemp:=0;
+  repeat
+    FromStrPosTemp:=PosEx(FromStr, SrcStr, FromStrPosTemp);
+    if FromStrPosTemp <> 0 then begin
+      Inc(FromStrPosTemp);
+    end;
+    if (FromStrPosTemp <> 0)
+    then if (FromStrPosTemp < ToStrPos)
+    then FromStrPos:=FromStrPosTemp; // !!!
+    //WriteLn('From: ' + IntToStr(FromStrPos));
+  until FromStrPosTemp=0;
+
+  Result:=Copy(SrcStr, FromStrPos-1, ToStrPos-FromStrPos+Length(ToStr));
+end;
+
 function ExtractSubString(SrcStr, FromStr, ToStr: String): String;
 var
   RetStr: String;
@@ -48,7 +83,7 @@ begin
   SetConsoleTitle(PChar(ExtractFileName(ParamStr(0))));
   WriteLn('MyParser by Yoti');
 
-  if (ParamCount <> 4) then begin
+  if (ParamCount < 4) then begin
     WriteLn('Error -1');
     Halt(1);
   end;
@@ -63,7 +98,9 @@ begin
   CloseFile(InFile);
 
   OutString:='';
-  OutString:=ExtractSubString(InString, ParamStr(2), ParamStr(3));
+  if (ParamStr(5) <> '')
+  then OutString:=ExtractSubString2(InString, ParamStr(2), ParamStr(3))
+  else OutString:=ExtractSubString(InString, ParamStr(2), ParamStr(3));
   if OutString <> '' then begin
     WriteLn(OutString);
 
