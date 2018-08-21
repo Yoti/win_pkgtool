@@ -24,13 +24,13 @@ if not exist !bin\psvpfsparser.exe (
 echo Step 1 of 3 (wget)
 !bin\wget -q --show-progress -O !temp\%1-APP.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
 findstr /I %1 !temp\%1-APP.TSV > !temp\%1-APP.STR
-!bin\myparser !temp\%1-APP.STR http .pkg .PKL >NULL
+!bin\myparser !temp\%1-APP.STR http .pkg .PKL >NUL
 if not exist !temp\%1-APP.PKL (
 	echo Error: no PKL [PKG Link]
 	goto thisistheend
 )
 set /p pkg=<!temp\%1-APP.PKL
-!bin\myparser !temp\%1-APP.STR KO5i \9 .ZRF >NULL
+!bin\myparser !temp\%1-APP.STR KO5i \9 .ZRF >NUL
 if not exist !temp\%1-APP.ZRF (
 	echo Error: no ZRF [zRIF String]
 	goto thisistheend
