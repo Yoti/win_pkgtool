@@ -22,7 +22,7 @@ if not exist !bin\psvpfsparser.exe (
 )
 
 echo Step 1 of 3 (wget)
-!bin\wget -q --show-progress -O !temp\%1-APP.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
+!bin\wget -q --show-progress -O !temp\%1-APP.TSV http://proxy.nopaystation.com/http://beta.nopaystation.com/tsv/PSV_GAMES.tsv
 findstr /I %1 !temp\%1-APP.TSV > !temp\%1-APP.STR
 !bin\myparser !temp\%1-APP.STR http .pkg .PKL >NUL
 if not exist !temp\%1-APP.PKL (

@@ -47,7 +47,7 @@ echo Step 2 of 3 (pkg2zip)
 move %1.pkg patch
 
 echo Step 3 of 3 (psvpfstools)
-!bin\wget -q --show-progress -O !temp\%1-PATCH.TSV https://nopaystation.com/tsv/PSV_GAMES.tsv
+!bin\wget -q --show-progress -O !temp\%1-PATCH.TSV http://proxy.nopaystation.com/http://beta.nopaystation.com/tsv/PSV_GAMES.tsv
 findstr /I %1 !temp\%1-PATCH.TSV > !temp\%1-PATCH.STR
 !bin\myparser !temp\%1-PATCH.STR KO5i \9 .ZRF >NUL
 if not exist !temp\%1-PATCH.ZRF (
