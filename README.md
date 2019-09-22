@@ -17,9 +17,9 @@
 
 На странице выбрать последнюю версию (на данный момент 1.19.4) и во втором столбце
 с пометкой "32-bit binary" выбрать файл "wget.exe".
-* **pkg2zip** https://github.com/mmozeiko/pkg2zip/releases
+* **pkg2zip** https://github.com/lusid1/pkg2zip/releases
 
-На странице выбрать последнюю версию (на данный момент 1.8), скачать архив
+На странице выбрать последнюю версию (на данный момент 2.2), скачать архив
 "pkg2zip_32bit.zip" и распаковать всё его содержимое.
 * **psvpfsparser** https://github.com/motoharu-gosuto/psvpfstools/releases
 
