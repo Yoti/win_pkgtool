@@ -12,7 +12,7 @@ if not exist !bin\wget.exe (
 )
 if not exist !bin\pkg2zip.exe (
 	echo Error: no pkg2zip
-	echo https://github.com/mmozeiko/pkg2zip/releases
+	echo https://github.com/lusid1/pkg2zip/releases
 	goto thisistheend
 )
 if not exist !bin\psvpfsparser.exe (
